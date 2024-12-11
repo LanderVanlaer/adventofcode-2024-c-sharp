@@ -32,8 +32,6 @@ while (node is not null)
     if (node.ValueRef.Id >= 0)
     {
         node = node.Next;
-        if (node is null) Console.WriteLine("NULL");
-
         continue;
     }
 
