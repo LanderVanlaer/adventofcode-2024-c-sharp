@@ -31,13 +31,18 @@ for (var x = 0; x < matrix[y].Length; x++)
 
 while (queue.TryDequeue(out var block))
 {
-    if (!connectsToHeads.ContainsKey(block.To))
-        connectsToHeads[block.To] = [];
+    if (!connectsToHeads.TryGetValue(block.To, out var value))
+    {
+        value = [];
+        connectsToHeads[block.To] = value;
+
+        var currentValue = matrix[(int)block.To.Y][(int)block.To.X];
+
+        foreach (var to in GetPositionsOneLower(block.To, currentValue))
+            queue.Enqueue(new QueueBlock(block.To, to));
+    }
 
     foreach (var head in connectsToHeads[block.From]) connectsToHeads[block.To].Add(head);
-
-    foreach (var to in GetPositionsOneLower(block.To, matrix[(int)block.To.Y][(int)block.To.X]))
-        queue.Enqueue(new QueueBlock(block.To, to));
 }
 
 var sum = 0;
